@@ -1,7 +1,6 @@
 from setuptools import setup
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+long_description = '''This package is a small utility for handling currency amounts and filesizes and converting to human-readable figures.'''
 
 setup(
     name='rdbl',
