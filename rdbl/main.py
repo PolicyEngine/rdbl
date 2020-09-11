@@ -8,7 +8,10 @@ def readable(num, sf=1, base=10, currency=False, small_unit="p", prefix="", suff
     if num < 0:
         return "-" + readable(-num, sf, base, currency, small_unit, prefix, suffixes)
     places = list(suffixes.keys())
-    num_digits = max(int(log(num, base)), min(places))
+    if num != 0:
+        num_digits = max(int(log(num, base)), min(places))
+    else:
+        num_digits = max(1, min(places))
     if num_digits in places:
         place = num_digits
     else:
@@ -27,7 +30,7 @@ def readable(num, sf=1, base=10, currency=False, small_unit="p", prefix="", suff
             suffix = small_unit
             rounded = rounded.split(".")[-1]
     else:
-        rounded = rounded.strip("0").strip(".")
+        rounded = rounded.rstrip("0").rstrip(".")
     return prefix + rounded + suffix
 
 def financial(num, currency_code):
@@ -38,14 +41,13 @@ def financial(num, currency_code):
     }
     if currency_code not in prefixes:
         raise Exception("Unsupported currency.")
-    prefix = prefixes[currency_code] if abs(num) >= 1 else ""
+    prefix = prefixes[currency_code] if (abs(num) >= 1 or num == 0) else ""
     small_units = {
         "GBP": "p",
         "EUR": "c",
         "USD": "c"
     }
     small_unit = small_units[currency_code]
-    prefix = prefix if abs(num) >= 1 else ""
     suffixes = {
         0: "",
         3: "k",
