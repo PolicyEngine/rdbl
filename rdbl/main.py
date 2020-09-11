@@ -34,7 +34,7 @@ def financial(num, currency_code):
     }
     if currency_code not in prefixes:
         raise Exception("Unsupported currency.")
-    prefix = prefixes[currency_code] if num >= 1 else ""
+    prefix = prefixes[currency_code] if abs(num) >= 1 else ""
     small_units = {
         "GBP": "p",
         "EUR": "c",
@@ -80,3 +80,5 @@ def bytes_bin(num):
         40: "TiB"
     }
     return readable(num, base=2, suffixes=suffixes)
+
+print(gbp(-22333933932))
