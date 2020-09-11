@@ -18,7 +18,7 @@ def readable(num, sf=1, base=10, currency=False, small_unit="p", prefix="", suff
         place = max(0, places[sorted(places + [num_digits]).index(num_digits) - 1])
     if currency and num_digits < 1:
         sf = num_digits + 2
-    rounded = str(round(num / (base ** (place - sf))) / (base ** sf))
+    rounded = str(round(num / (base ** (num_digits - sf))) / (base ** (place - num_digits + sf)))
     suffix = suffixes[place]
     if currency and num_digits < 1 and "." in rounded:
         ending = rounded.split(".")[-1]
@@ -96,3 +96,5 @@ def num(number):
         12: "tr",
     }
     return readable(number, suffixes=suffixes)
+
+print(gbp(3390222))
