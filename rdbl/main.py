@@ -1,6 +1,10 @@
 from math import log
 
 def readable(num, sf=1, base=10, currency=False, small_unit="p", prefix="", suffixes={0: ""}):
+    try:
+        float(num)
+    except:
+        raise Exception("Passed a non-numerical input.")
     if num < 0:
         return "-" + readable(-num, sf, base, currency, small_unit, prefix, suffixes)
     places = list(suffixes.keys())
@@ -80,3 +84,13 @@ def bytes_bin(num):
         40: "TiB"
     }
     return readable(num, base=2, suffixes=suffixes)
+
+def num(number):
+    suffixes = {
+        0: "",
+        3: "k",
+        6: "m",
+        9: "bn",
+        12: "tr",
+    }
+    return readable(number, suffixes=suffixes)
