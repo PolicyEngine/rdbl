@@ -80,5 +80,3 @@ def bytes_bin(num):
         40: "TiB"
     }
     return readable(num, base=2, suffixes=suffixes)
-
-print(gbp(-22333933932))
