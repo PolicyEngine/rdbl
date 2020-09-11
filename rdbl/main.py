@@ -96,5 +96,3 @@ def num(number):
         12: "tr",
     }
     return readable(number, suffixes=suffixes)
-
-print(gbp(3390222))
