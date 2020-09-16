@@ -47,6 +47,8 @@ def _financial(num, currency_code):
         return str(int(round(num * 1e+2))) + small_units[currency_code]
     if num > 0 and num < 1e-2:
         return prefixes[currency_code] + "~0"
+    if num == 0:
+        return refixes[currency_code] + "0"
     if num < 0:
         return "-" + _financial(-num, currency_code)
     prefixes = {
