@@ -4,7 +4,7 @@ long_description = '''This package is a small utility for handling currency amou
 
 setup(
     name='rdbl',
-    version='0.1.2',
+    version='0.1.3',
     author='Nikhil Woodruff',
     author_email='nikhil.woodruff@outlook.com',
     packages=['rdbl'],
