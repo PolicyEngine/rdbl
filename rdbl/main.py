@@ -85,5 +85,3 @@ def num(number):
         12: "tr",
     }
     return _readable(number, suffixes=suffixes)
-
-print(num(0.22))
