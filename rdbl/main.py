@@ -1,53 +1,54 @@
-from math import log
+from math import log10, floor
 
-def readable(num, sf=1, base=10, currency=False, small_unit="p", prefix="", suffixes={0: ""}):
+def _round_sf(num, sf=2):
+    return round(num, sf - int(log10(abs(num))) - 1)
+
+def _highest_matching(mapping, key):
+    if key in mapping:
+        return key, mapping[key]
+    keys = list(mapping.keys())
+    matching_key = keys[sorted(keys + [key]).index(key) - 1]
+    return matching_key, mapping[matching_key]
+
+def _readable(
+    num, sf=2, prefixes={0: ""}, suffixes={0: ""}
+):
     try:
         float(num)
     except:
         raise Exception("Passed a non-numerical input.")
+    num_rounded = _round_sf(num, sf=sf)
     if num < 0:
-        return "-" + readable(-num, sf, base, currency, small_unit, prefix, suffixes)
-    places = list(suffixes.keys())
-    if num != 0:
-        num_digits = max(int(log(num, base)), min(places))
+        return "-" + _readable(-num, sf=sf, prefixes=prefixes, suffixes=suffixes)
+    if num == 0:
+        return prefixes[0] + "0" + suffixes[0]
+    place_value = int(log10(num_rounded))
+    _, prefix = _highest_matching(prefixes, place_value)
+    place, suffix = _highest_matching(suffixes, place_value)
+    reduced_num = _round_sf(num / (10 ** place), sf)
+    if place >= max(suffixes.keys()):
+        num_str = format(int(reduced_num), ",")
     else:
-        num_digits = max(1, min(places))
-    if num_digits in places:
-        place = num_digits
-    else:
-        place = max(0, places[sorted(places + [num_digits]).index(num_digits) - 1])
-    if currency and num_digits < 1:
-        sf = num_digits + 2
-    rounded = str(round(num / (base ** (num_digits - sf))) / (base ** (place - num_digits + sf)))
-    suffix = suffixes[place]
-    if currency and num_digits < 1 and "." in rounded:
-        ending = rounded.split(".")[-1]
-        rounded = rounded.split(".")[0] + "." + ending[:2] + "".join(["0"] * (2 - len(ending[:2])))
-        if float(rounded) < 0.01:
-            prefix = "£"
-            rounded = "~0"
-        elif float(rounded) < 1:
-            suffix = small_unit
-            rounded = rounded.split(".")[-1]
-    else:
-        rounded = rounded.rstrip("0").rstrip(".")
-    return prefix + rounded + suffix
+        num_str = str(reduced_num)
+    return prefix + num_str + suffix
 
-def financial(num, currency_code):
-    prefixes = {
-        "GBP": "£",
-        "EUR": "€",
-        "USD": "$"
-    }
+
+def _financial(num, currency_code):
+    prefixes = {"GBP": "£", "EUR": "€", "USD": "$"}
     if currency_code not in prefixes:
         raise Exception("Unsupported currency.")
-    prefix = prefixes[currency_code] if (abs(num) >= 1 or num == 0) else ""
-    small_units = {
-        "GBP": "p",
-        "EUR": "c",
-        "USD": "c"
+    small_units = {"GBP": "p", "EUR": "c", "USD": "c"}
+    if num >= 1 and num < 10:
+        return prefixes[currency_code] + str(round(num, 2))
+    if num >= 0.01 and num < 1:
+        return str(int(round(num * 1e+2))) + small_units[currency_code]
+    if num > 0 and num < 1e-2:
+        return prefixes[currency_code] + "~0"
+    if num < 0:
+        return "-" + _financial(-num, currency_code)
+    prefixes = {
+        0: prefixes[currency_code]
     }
-    small_unit = small_units[currency_code]
     suffixes = {
         0: "",
         3: "k",
@@ -55,37 +56,20 @@ def financial(num, currency_code):
         9: "bn",
         12: "tr",
     }
-    return readable(num, currency=True, small_unit=small_unit, prefix=prefix, suffixes=suffixes)
+    return _readable(num, prefixes=prefixes, suffixes=suffixes)
+
 
 def gbp(num):
-    return financial(num, currency_code="GBP")
+    return _financial(num, currency_code="GBP")
+
 
 def eur(num):
-    return financial(num, currency_code="EUR")
+    return _financial(num, currency_code="EUR")
+
 
 def usd(num):
-    return financial(num, currency_code="USD")
+    return _financial(num, currency_code="USD")
 
-def bytes_SI(num):
-    suffixes = {
-        0: "B",
-        3: "kB",
-        6: "MB",
-        9: "GB",
-        12: "TB",
-        15: "PB"
-    }
-    return readable(num, base=10, suffixes=suffixes)
-
-def bytes_bin(num):
-    suffixes = {
-        0: "B",
-        10: "KiB",
-        20: "MiB",
-        30: "GiB",
-        40: "TiB"
-    }
-    return readable(num, base=2, suffixes=suffixes)
 
 def num(number):
     suffixes = {
@@ -95,4 +79,4 @@ def num(number):
         9: "bn",
         12: "tr",
     }
-    return readable(number, suffixes=suffixes)
+    return _readable(number, suffixes=suffixes)
