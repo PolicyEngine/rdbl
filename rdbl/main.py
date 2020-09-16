@@ -32,7 +32,7 @@ def _readable(
     if place >= max(suffixes.keys()):
         num_str = format(int(reduced_num), ",")
     else:
-        num_str = str(reduced_num)
+        num_str = str(reduced_num).rstrip("0").rstrip(".")
     return prefix + num_str + suffix
 
 
