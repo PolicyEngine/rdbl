@@ -7,7 +7,10 @@ def _highest_matching(mapping, key):
     if key in mapping:
         return key, mapping[key]
     keys = list(mapping.keys())
-    matching_key = keys[sorted(keys + [key]).index(key) - 1]
+    if key < min(keys):
+        matching_key = min(keys)
+    else:
+        matching_key = keys[sorted(keys + [key]).index(key) - 1]
     return matching_key, mapping[matching_key]
 
 def _readable(
@@ -72,6 +75,8 @@ def usd(num):
 
 
 def num(number):
+    if number == 0:
+        return number
     suffixes = {
         0: "",
         3: "k",
@@ -80,3 +85,5 @@ def num(number):
         12: "tr",
     }
     return _readable(number, suffixes=suffixes)
+
+print(num(0.22))
