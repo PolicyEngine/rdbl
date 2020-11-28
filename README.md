@@ -3,7 +3,7 @@
 This is a small package made for convenience in handling currencies and other figures. It's installable via:
 
 ```console
-pip install git://github.com/nikhilwoodruff/rdbl
+pip install git+http://github.com/nikhilwoodruff/rdbl.git
 ```
 
 ## Usage
