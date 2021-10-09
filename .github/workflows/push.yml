@@ -24,7 +24,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2
       - name: Install dependencies
-        run: make install
+        run: make install-dev
       - name: Run the main tests
         run: make test
   Publish:
@@ -35,6 +35,8 @@ jobs:
         uses: actions/checkout@v2
       - name: Setup Python
         uses: actions/setup-python@v2
+      - name: Install dependencies
+        run: make install-dev
       - name: Build package
         run: make
       - name: Publish a Python distribution to PyPI

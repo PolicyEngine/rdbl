@@ -3,7 +3,7 @@ all:
 install:
 	pip install -e .
 install-dev:
-	pip install pytest black autopep8
+	pip install pytest black autopep8 wheel
 	pip install -e .
 test:
 	pytest rdbl/tests -vv
