@@ -16,16 +16,16 @@ def _highest_matching(mapping, key):
     return matching_key, mapping[matching_key]
 
 
-def _readable(num, sf=3, prefixes={0: ""}, suffixes={0: ""}):
+def _readable(
+    num, sf=3, prefixes={0: ""}, suffixes={0: ""}
+):
     try:
         float(num)
     except:
         raise Exception("Passed a non-numerical input.")
     num_rounded = _round_sf(num, sf=sf)
     if num < 0:
-        return "-" + _readable(
-            -num, sf=sf, prefixes=prefixes, suffixes=suffixes
-        )
+        return "-" + _readable(-num, sf=sf, prefixes=prefixes, suffixes=suffixes)
     if num == 0:
         return prefixes[0] + "0" + suffixes[0]
     place_value = int(log10(num_rounded))
@@ -47,14 +47,16 @@ def _financial(num, currency_code, **kwargs):
     if num >= 1 and num < 10:
         return prefixes[currency_code] + str(round(num, 2))
     if num >= 0.01 and num < 1:
-        return str(int(round(num * 1e2))) + small_units[currency_code]
+        return str(int(round(num * 1e+2))) + small_units[currency_code]
     if num > 0 and num < 1e-2:
         return prefixes[currency_code] + "~0"
     if num == 0:
         return prefixes[currency_code] + "0"
     if num < 0:
         return "-" + _financial(-num, currency_code)
-    prefixes = {0: prefixes[currency_code]}
+    prefixes = {
+        0: prefixes[currency_code]
+    }
     suffixes = {
         0: "",
         3: "k",
