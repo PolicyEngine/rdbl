@@ -19,6 +19,6 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2
       - name: Install dependencies
-        run: make install
+        run: make install-dev
       - name: Run the main tests
         run: make test
