@@ -39,13 +39,14 @@ def _readable(num, sf=3, prefixes={0: ""}, suffixes={0: ""}):
     return prefix + num_str + suffix
 
 
-def _financial(num, currency_code, **kwargs):
+def _financial(num, currency_code, exact_upper_bound=10, **kwargs):
     prefixes = {"GBP": "£", "EUR": "€", "USD": "$"}
     if currency_code not in prefixes:
         raise Exception("Unsupported currency.")
     small_units = {"GBP": "p", "EUR": "c", "USD": "c"}
-    if num >= 1 and num < 10:
-        return prefixes[currency_code] + str(round(num, 2))
+    if num >= 1 and num < exact_upper_bound:
+        print(num, round(num, 2))
+        return prefixes[currency_code] + f"{round(num, 2):,}"
     if num >= 0.01 and num < 1:
         return str(int(round(num * 1e2))) + small_units[currency_code]
     if num > 0 and num < 1e-2:
