@@ -23,7 +23,9 @@ def _readable(num, sf=3, prefixes={0: ""}, suffixes={0: ""}):
         raise Exception("Passed a non-numerical input.")
     num_rounded = _round_sf(num, sf=sf)
     if num < 0:
-        return "-" + _readable(-num, sf=sf, prefixes=prefixes, suffixes=suffixes)
+        return "-" + _readable(
+            -num, sf=sf, prefixes=prefixes, suffixes=suffixes
+        )
     if num == 0:
         return prefixes[0] + "0" + suffixes[0]
     place_value = int(log10(num_rounded))
