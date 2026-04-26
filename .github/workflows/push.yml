@@ -12,6 +12,8 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
       - uses: psf/black@stable
         with:
           options: ". -l 79 --check"
@@ -23,6 +25,8 @@ jobs:
         uses: actions/checkout@v6
       - name: Setup Python
         uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
       - name: Install dependencies
         run: make install-dev
       - name: Run the main tests
@@ -35,6 +39,8 @@ jobs:
         uses: actions/checkout@v6
       - name: Setup Python
         uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
       - name: Install dependencies
         run: make install-dev
       - name: Build package
