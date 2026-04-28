@@ -31,7 +31,7 @@ def _readable(num, sf=3, prefixes={0: ""}, suffixes={0: ""}):
     place_value = int(log10(num_rounded))
     _, prefix = _highest_matching(prefixes, place_value)
     place, suffix = _highest_matching(suffixes, place_value)
-    reduced_num = _round_sf(num / (10 ** place), sf)
+    reduced_num = _round_sf(num / (10**place), sf)
     if place >= max(suffixes.keys()):
         num_str = format(int(reduced_num), ",")
     else:
